@@ -3,10 +3,30 @@ var http = require('http'),
     WebSocketServer = require('ws').Server,
     staticServer = new static.Server('../'),
     httpSever,
-    webSocketServer;
+    webSocketServer,
+    subscribers = {};
 
 httpServer = http.createServer(accept).listen(8080);
 webSocketServer = new WebSocketServer({server: httpServer});
+webSocketServer.on('connection', function(ws) {
+    var id = Math.random();
+
+    subscribers[id] = ws;
+
+    ws.on('message', function (data) {
+        var jsonData = JSON.parse(data),
+            message = jsonData.id + ': ' + jsonData.message;
+
+        console.log(message);
+        publish(message);
+    });
+
+    ws.on('close', function () {
+        console.log('undescribed');
+        delete subscribers[id];
+        console.log(subscribers);
+    });
+});
 console.log('web server created on port 8080');
 
 function accept(request, response) {
@@ -15,10 +35,12 @@ function accept(request, response) {
     staticServer.serve(request, response);
 }
 
-webSocketServer.on('connection', function(ws) {
-    ws.send('hello, client');
+function publish (message) {
+    var id;
 
-    ws.on('message', function (message) {
-        console.log(message);
-    });
-});
+    for (id in subscribers) {
+        subscribers[id].send(message);
+    }
+
+    console.log(Object.keys(subscribers));
+}

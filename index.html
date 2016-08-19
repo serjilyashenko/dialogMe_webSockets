@@ -13,6 +13,7 @@
 </head>
 <body>
     <form class="center" name="publish">
+        <div>Your id: <span id="my-id"></span></div>
         <input type="text" name="message">
         <input type="submit" value="Отправить">
     </form>
@@ -21,9 +22,11 @@
 
     <script>
         var url = window.location.href,
-            newUrl = url.replace('http', 'ws');
-        console.log(newUrl);
-        new Chat(newUrl);
+            newUrl = url.replace('http', 'ws'),
+            id = 'nick-' + Math.random();
+        document.getElementById('my-id').appendChild(document.createTextNode(id));
+//        console.log(newUrl, id);
+        new Chat(newUrl, id, document.forms.publish, document.getElementById('subscribe'));
     </script>
 </body>
 </html>
