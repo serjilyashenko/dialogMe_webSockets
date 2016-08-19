@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dialog me</title>
+    <script src="js/Chat.js"></script>
+    <style>
+        .center {
+            margin: auto;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <form class="center" name="publish">
+        <input type="text" name="message">
+        <input type="submit" value="Отправить">
+    </form>
+
+    <div id="subscribe"></div>
+
+    <script>
+        var url = window.location.href;
+        console.log(url);
+        new Chat();
+    </script>
+</body>
+</html>
