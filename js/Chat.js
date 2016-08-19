@@ -1,37 +1,51 @@
 var Chat = (function () {
     var Chat = function (url, id, form, pane) {
-        var ws = new WebSocket(url);
+        this.id = id;
+        this.pane = pane;
+        this.form = form;
+
+        this.initWebSocket(url);
+    };
+
+    Chat.prototype.initWebSocket = function (url) {
+        var self = this,
+            ws = new WebSocket(url);
 
         ws.onopen = function () {
-            var self = this;
-            form.onsubmit = function () {
-                var messageElement = form.message;
-
-                if (messageElement.value) {
-                    var data = JSON.stringify({'id': id, 'message': messageElement.value});
-                    self.send(data);
-                    messageElement.value = '';
-                }
-
-                return false;
-            };
+            console.log('websocket opened ...');
+            self.initForm(this);
         };
 
         ws.onclose = function () {
-        //    TODO: reopen webSocket
-        }
-
-        ws.onmessage = function (event) {
-            addMessage(event.data, pane);
+            console.log('websocket closed');
+            setTimeout(function () {
+                self.initWebSocket(url);
+            }, 2000);
         };
 
+        ws.onmessage = function (event) {
+            self.addMessage(event.data);
+        };
     };
 
-    function addMessage (message, pane) {
+    Chat.prototype.initForm = function (ws) {
+        var self = this;
+        this.form.onsubmit = function () {
+            var messageElement = this.message;
+            if (messageElement.value) {
+                var data = JSON.stringify({'id': self.id, 'message': messageElement.value});
+                ws.send(data);
+                messageElement.value = '';
+            }
+            return false;
+        };
+    };
+
+    Chat.prototype.addMessage = function (message) {
         var messageElement = document.createElement('div');
         messageElement.appendChild(document.createTextNode(message));
-        pane.appendChild(messageElement);
-    }
+        this.pane.appendChild(messageElement);
+    };
     
     return Chat;
 }());

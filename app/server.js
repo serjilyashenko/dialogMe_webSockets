@@ -12,7 +12,7 @@ webSocketServer.on('connection', initWebSocketServer);
 console.log('web server created on port 8080');
 
 function initHttpServer(request, response) {
-    console.log(request.url);
+    console.log(request.url.href);
     staticServer.serve(request, response);
 }
 
