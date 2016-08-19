@@ -9,6 +9,7 @@
   "author": "skyIlyashenko",
   "license": "ISC",
   "devDependencies": {
-    "node-static": "^0.7.8"
+    "node-static": "^0.7.8",
+    "ws": "^1.1.1"
   }
 }

@@ -20,9 +20,10 @@
     <div id="subscribe"></div>
 
     <script>
-        var url = window.location.href;
-        console.log(url);
-        new Chat();
+        var url = window.location.href,
+            newUrl = url.replace('http', 'ws');
+        console.log(newUrl);
+        new Chat(newUrl);
     </script>
 </body>
 </html>
