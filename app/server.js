@@ -2,13 +2,21 @@ var http = require('http'),
     static = require('node-static'),
     WebSocketServer = require('ws').Server,
     staticServer = new static.Server('../'),
-    httpSever,
+    httpServer,
     webSocketServer,
     subscribers = {};
 
-httpServer = http.createServer(accept).listen(8080);
+httpServer = http.createServer(initHttpServer).listen(8080);
 webSocketServer = new WebSocketServer({server: httpServer});
-webSocketServer.on('connection', function(ws) {
+webSocketServer.on('connection', initWebSocketServer);
+console.log('web server created on port 8080');
+
+function initHttpServer(request, response) {
+    console.log(request.url);
+    staticServer.serve(request, response);
+}
+
+function initWebSocketServer(ws) {
     var id = Math.random();
 
     subscribers[id] = ws;
@@ -26,21 +34,12 @@ webSocketServer.on('connection', function(ws) {
         delete subscribers[id];
         console.log(subscribers);
     });
-});
-console.log('web server created on port 8080');
-
-function accept(request, response) {
-    console.log(request.url);
-
-    staticServer.serve(request, response);
 }
 
 function publish (message) {
     var id;
-
     for (id in subscribers) {
         subscribers[id].send(message);
     }
-
     console.log(Object.keys(subscribers));
 }
