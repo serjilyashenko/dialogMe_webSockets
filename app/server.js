@@ -12,7 +12,7 @@ webSocketServer.on('connection', initWebSocketServer);
 console.log('web server created on port 8080');
 
 function initHttpServer(request, response) {
-    console.log(request.url.href);
+    // console.log(request.url.href);
     staticServer.serve(request, response);
 }
 
@@ -22,22 +22,23 @@ function initWebSocketServer(ws) {
     subscribers[id] = ws;
 
     ws.on('message', function (data) {
-        var jsonData = JSON.parse(data),
+        var jsonData = JSON.parse(data);
             message = jsonData.id + ': ' + jsonData.message;
 
-        console.log(message);
-        publish(message);
+        console.dir(message);
+        publish(jsonData);
     });
 
     ws.on('close', function () {
         console.log('undescribed');
         delete subscribers[id];
-        console.log(subscribers);
+        console.log(Object.keys(subscribers));
     });
 }
 
 function publish (message) {
-    var id;
+    var id,
+        message = JSON.stringify(message);
     for (id in subscribers) {
         subscribers[id].send(message);
     }

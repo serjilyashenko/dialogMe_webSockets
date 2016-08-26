@@ -24,6 +24,7 @@ var Chat = (function () {
         };
 
         ws.onmessage = function (event) {
+            
             self.addMessage(event.data);
         };
     };
@@ -41,9 +42,11 @@ var Chat = (function () {
         };
     };
 
-    Chat.prototype.addMessage = function (message) {
-        var messageElement = document.createElement('div');
-        messageElement.appendChild(document.createTextNode(message));
+    Chat.prototype.addMessage = function (data) {
+        var messageElement = document.createElement('div'),
+            data = JSON.parse(data),
+            stringToPublish =  data.id + ': ' + data.message;
+        messageElement.appendChild(document.createTextNode(stringToPublish));
         this.pane.appendChild(messageElement);
     };
     
