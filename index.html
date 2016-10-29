@@ -18,14 +18,22 @@
         <input type="submit" value="Отправить">
     </form>
 
-    <div id="subscribe"></div>
+    <div id="chat-field" class="center"></div>
 
     <script>
         var url = window.location.href,
+            nicks= ['Cat', 'Dog', 'Rabbit', 'Panda', 'Fox',
+                    'Duck', 'Tiger', 'Lion', 'Chicken', 'Dolphin',
+                    'Dove', 'Bear', 'Zebra', 'Lemur', 'Lama'],
             newUrl = url.replace('http', 'ws'),
-            id = 'nick-' + Math.random();
+            id = nicks[getRandomInt(0, nicks.length)];
+
         document.getElementById('my-id').appendChild(document.createTextNode(id));
-        new Chat(newUrl, id, document.forms.publish, document.getElementById('subscribe'));
+        new Chat(newUrl, id, document.forms.publish, document.getElementById('chat-field'));
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
     </script>
 </body>
 </html>
